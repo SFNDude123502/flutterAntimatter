@@ -21,8 +21,11 @@ class _MyFirstAppState extends State<MyFirstApp> {
 
   double tickFactor = 0.1;
   int tickCost = 1000;
+  double defaultTickFactor = 0.1;
+  double tickIncrement = 1.11;
   int dimBoost = 0;
   int _selectedIndex = 0;
+  int dimGal = 0;
 
   Dimension dim1 = Dimension(10.toDouble(), 1000);
   Dimension dim2 = Dimension(100.toDouble(), 10000);
@@ -113,7 +116,7 @@ class _MyFirstAppState extends State<MyFirstApp> {
                         if (antimatter >= tickCost) {
                           setState(() {
                             antimatter -= tickCost;
-                            tickFactor = (tickFactor * 1.11);
+                            tickFactor = (tickFactor * tickIncrement);
                             tickCost *= 10;
                           });
                         }
@@ -185,7 +188,7 @@ class _MyFirstAppState extends State<MyFirstApp> {
                           }
                         });
                       },
-                      child: checkDimBoosts(
+                      child: Req().checkDimBoosts(
                         dimBoost,
                         1,
                         dimContent(dim5, "5th", uiMode),
@@ -200,7 +203,7 @@ class _MyFirstAppState extends State<MyFirstApp> {
                           }
                         });
                       },
-                      child: checkDimBoosts(
+                      child: Req().checkDimBoosts(
                         dimBoost,
                         2,
                         dimContent(dim6, "6th", uiMode),
@@ -215,7 +218,7 @@ class _MyFirstAppState extends State<MyFirstApp> {
                           }
                         });
                       },
-                      child: checkDimBoosts(
+                      child: Req().checkDimBoosts(
                         dimBoost,
                         3,
                         dimContent(dim7, "7th", uiMode),
@@ -230,7 +233,7 @@ class _MyFirstAppState extends State<MyFirstApp> {
                           }
                         });
                       },
-                      child: checkDimBoosts(
+                      child: Req().checkDimBoosts(
                         dimBoost,
                         4,
                         dimContent(dim8, "8th", uiMode),
@@ -239,11 +242,11 @@ class _MyFirstAppState extends State<MyFirstApp> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          if (dimBoostReq(dimBoost, dimList)) {
+                          if (Req().dimBoostReq(dimBoost, dimList)) {
                             dimBoost++;
-                            dimAdjustment(dimBoost, dimList);
+                            Adj().dimBoostAdjustment(dimBoost, dimList);
                             antimatter = 10;
-                            tickFactor = 0.1;
+                            tickFactor = defaultTickFactor;
                             tickCost = 1000;
                           }
                         });
@@ -256,8 +259,23 @@ class _MyFirstAppState extends State<MyFirstApp> {
                             width: 2,
                           ),
                         ),
-                        child: dimBoostText(dimBoost, uiMode),
+                        child: Texts().dimBoostText(dimBoost, uiMode),
                       ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          if (Req().dimGalReq(dimGal, dimList)) {
+                            dimGal++;
+                            Adj().dimGalAdjustment(dimGal, dimList);
+                            antimatter = 10;
+                            tickIncrement += 0.02;
+                            tickFactor = defaultTickFactor;
+                            tickCost = 1000;
+                          }
+                        });
+                      },
+                      child: Texts().dimGalText(dimGal, uiMode),
                     ),
                   ],
                 ),
@@ -285,7 +303,7 @@ class _MyFirstAppState extends State<MyFirstApp> {
                           }
                         });
                       }),
-                      child: optionButtonText(
+                      child: Texts().optionButtonText(
                           "Current Mode: \n${uiMode.name}", uiMode),
                     ),
                   ],

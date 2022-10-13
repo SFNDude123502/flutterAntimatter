@@ -48,25 +48,6 @@ String i2n(num input) {
   return output;
 }
 
-void dimAdjustment(int dimBoosts, List<Dimension> dimList) {
-  if (dimBoosts <= 8) {
-    for (int i = 0; i < dimBoosts; i++) {
-      dimList[i].defaultMult *= 2;
-    }
-  } else {
-    for (int i = 0; i < dimList.length; i++) {
-      dimList[i].defaultMult *= 2;
-    }
-  }
-
-  for (int i = 0; i < dimList.length; i++) {
-    dimList[i].amount = 0;
-    dimList[i].mult = dimList[i].defaultMult;
-    dimList[i].pur = 0;
-    dimList[i].cost = dimList[i].defaultCost;
-  }
-}
-
 BoxDecoration dimBox(UIMode uimode) {
   return BoxDecoration(
     color: uimode.buttonColors['buttonBackgroundColor'],
@@ -87,76 +68,6 @@ Container dimContent(Dimension dim, String numText, UIMode uimode) {
   );
 }
 
-Container checkDimBoosts(int dimBoosts, int goal, Container inputWidget) {
-  if (dimBoosts >= goal) {
-    return inputWidget;
-  } else {
-    return Container();
-  }
-}
-
-Text dimBoostText(dimBoosts, UIMode uimode) {
-  int dimAmt;
-  String dimType;
-  if (dimBoosts <= 4) {
-    dimAmt = 20;
-  } else {
-    dimAmt = (20 + ((dimBoosts - 4) * 15)).toInt();
-  }
-  switch (dimBoosts) {
-    case 0:
-      dimType = "4th";
-      break;
-    case 1:
-      dimType = "5th";
-      break;
-    case 2:
-      dimType = "6th";
-      break;
-    case 3:
-      dimType = "7th";
-      break;
-    default:
-      dimType = "8th";
-      break;
-  }
-  return Text(
-    "Dimension Boosts: $dimBoosts \n Requires: $dimAmt $dimType Dimensions",
-    style: TextStyle(color: uimode.buttonColors["buttonTextColor"]),
-  );
-}
-
-Container optionButtonText(String text, UIMode uimode) {
-  return Container(
-    decoration: BoxDecoration(
-        color: uimode.buttonColors["buttonBackgroundColor"],
-        border: Border.all(
-            color: uimode.buttonColors["buttonGlowBorderColor"], width: 3)),
-    child: Text(
-      text,
-      style: TextStyle(
-        color: uimode.buttonColors["buttonTextColor"],
-      ),
-    ),
-  );
-}
-
-bool dimBoostReq(int dimboosts, List<Dimension> dimlist) {
-  if (dimboosts < 4) {
-    if (dimlist[dimboosts + 3].amount >= 20) {
-      return true;
-    } else {
-      return false;
-    }
-  } else {
-    if (dimlist[7].amount >= (20 + ((dimboosts - 4) * 15)).toInt()) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
 double timerCalcs(List<Dimension> dimlist, double tickfactor) {
   dimlist[6].amount += (dimlist[7].mult * dimlist[7].amount * tickfactor);
   dimlist[5].amount += (dimlist[6].mult * dimlist[6].amount * tickfactor);
@@ -166,4 +77,120 @@ double timerCalcs(List<Dimension> dimlist, double tickfactor) {
   dimlist[1].amount += (dimlist[2].mult * dimlist[2].amount * tickfactor);
   dimlist[0].amount += (dimlist[1].mult * dimlist[1].amount * tickfactor);
   return (dimlist[0].mult * dimlist[0].amount * tickfactor);
+}
+
+class Adj {
+  void dimBoostAdjustment(int dimBoosts, List<Dimension> dimList) {
+    if (dimBoosts <= 8) {
+      for (int i = 0; i < dimBoosts; i++) {
+        dimList[i].defaultMult *= 2;
+      }
+    } else {
+      for (int i = 0; i < dimList.length; i++) {
+        dimList[i].defaultMult *= 2;
+      }
+    }
+
+    for (int i = 0; i < dimList.length; i++) {
+      dimList[i].amount = 0;
+      dimList[i].mult = dimList[i].defaultMult;
+      dimList[i].pur = 0;
+      dimList[i].cost = dimList[i].defaultCost;
+    }
+  }
+
+  void dimGalAdjustment(int dimGal, List<Dimension> dimList) {
+    for (int i = 0; i < dimList.length; i++) {
+      dimList[i].amount = 0;
+      dimList[i].mult = dimList[i].defaultMult;
+      dimList[i].pur = 0;
+      dimList[i].cost = dimList[i].defaultCost;
+    }
+  }
+}
+
+class Req {
+  bool dimBoostReq(int dimboosts, List<Dimension> dimlist) {
+    if (dimboosts < 4) {
+      if (dimlist[dimboosts + 3].amount >= 20) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (dimlist[7].amount >= (20 + ((dimboosts - 4) * 15)).toInt()) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  Container checkDimBoosts(int dimBoosts, int goal, Container inputWidget) {
+    if (dimBoosts >= goal) {
+      return inputWidget;
+    } else {
+      return Container();
+    }
+  }
+
+  bool dimGalReq(int dimGal, List<Dimension> dimlist) {
+    if (dimlist[7].amount >= dimGal * 60 + 80) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+class Texts {
+  Text dimGalText(int dimGal, UIMode uimode) {
+    return const Text("");
+  }
+
+  Container optionButtonText(String text, UIMode uimode) {
+    return Container(
+      decoration: BoxDecoration(
+          color: uimode.buttonColors["buttonBackgroundColor"],
+          border: Border.all(
+              color: uimode.buttonColors["buttonGlowBorderColor"], width: 3)),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: uimode.buttonColors["buttonTextColor"],
+        ),
+      ),
+    );
+  }
+
+  Text dimBoostText(dimBoosts, UIMode uimode) {
+    int dimAmt;
+    String dimType;
+    if (dimBoosts <= 4) {
+      dimAmt = 20;
+    } else {
+      dimAmt = (20 + ((dimBoosts - 4) * 15)).toInt();
+    }
+    switch (dimBoosts) {
+      case 0:
+        dimType = "4th";
+        break;
+      case 1:
+        dimType = "5th";
+        break;
+      case 2:
+        dimType = "6th";
+        break;
+      case 3:
+        dimType = "7th";
+        break;
+      default:
+        dimType = "8th";
+        break;
+    }
+    return Text(
+      "Dimension Boosts: $dimBoosts \n Requires: $dimAmt $dimType Dimensions",
+      style: TextStyle(color: uimode.buttonColors["buttonTextColor"]),
+    );
+  }
 }
